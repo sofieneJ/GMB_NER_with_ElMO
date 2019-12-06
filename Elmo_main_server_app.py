@@ -142,7 +142,9 @@ class NERExtractor():
             # print(np_sequences[k])
             for i,entity_name in enumerate(predicted_tags_seq):
                 if entity_name != self.config_dic["PAD_TAG"] and entity_name[0]=="B":
-                    start_index = len(' '.join(np_sequences[k][:i]))+1+ input.index(sent, sum([len(sentence) for h,sentence in enumerate(sents) if h<k]))
+                    start_index = input.index(sent, sum([len(sentence) for h,sentence in enumerate(sents) if h<k]))
+                    if i!=0:
+                        start_index += len(' '.join(np_sequences[k][:i]))+1
                     j = i+1
                     entity_len = len(np_sequences[k][i])
                     entity_text = np_sequences[k][i]
@@ -215,7 +217,7 @@ The arrest was carried out on Thursday morning during a Europol-backed operation
 
 
 if __name__=='__main__':
-    sample = test_main()
+    # sample = test_main()
     sample = """Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia.
 
 Yorgen Fenech was detained after police intercepted his yacht off the Mediterranean island, sources with knowledge of the matter said.
@@ -241,6 +243,6 @@ Caruana Galizia, a well-known investigative journalist who wrote an anti-corrupt
 The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed."""
     print(sample.index("Fenech is a director and co-owner of a business group that won"))
 
-    print ((sample[0:172]))
+    print ((sample[714:721]))
     
 
