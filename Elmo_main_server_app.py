@@ -142,9 +142,7 @@ class NERExtractor():
             # print(np_sequences[k])
             for i,entity_name in enumerate(predicted_tags_seq):
                 if entity_name != self.config_dic["PAD_TAG"] and entity_name[0]=="B":
-                    start_index = input.index(sent, sum([len(sentence) for h,sentence in enumerate(sents) if h<k]))
-                    if i!=0:
-                        start_index += len(' '.join(np_sequences[k][:i]))+1
+                    start_index = sent.index(np_sequences[k][i], len(' '.join(np_sequences[k][:i]))) + input.index(sent, sum([len(sentence) for h,sentence in enumerate(sents) if h<k]))
                     j = i+1
                     entity_len = len(np_sequences[k][i])
                     entity_text = np_sequences[k][i]
@@ -209,7 +207,24 @@ Yorgen Fenech of the Tumas Group talks with VIP guests during the opening of the
 
 Caruana Galizia, a well-known investigative journalist who wrote an anti-corruption blog, was killed by a car bomb near the Maltese capital Valletta in October 2017 - a murder that shocked Europe and raised questions about the rule of law on the Mediterranean island.
 
-The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed."""
+The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed.
+
+Investigators are following an alleged money trail between the suspected middleman and three men accused of killing the 53-year-old journalist, The Times of Malta reported.
+
+The men, who include two brothers, were charged with triggering the car bomb in December 2017.
+The trial is yet to take place.
+
+The government's decision regarding a presidential pardon is believed to have been discussed at a Cabinet meeting on Tuesday where some ministers were said to be reluctant to grant it.
+
+Muscat justified the decision in his statement, saying that "the government did what it had to do."
+
+"As I said from the start, I will leave no stone unturned in this case.
+There is no question of impunity for whoever is responsible for this crime," he added.
+
+In September a public inquiry was ordered into Daphne Caruana Galizia's murder, in response to recommendations made in a report by the Council of Europe - a non-EU human rights body with 47 member states.
+It said the failure of the Maltese authorities to bring perpetrators to trial raised serious questions about the rule of law on the island.
+
+The independence of the inquiry has been questioned by the murdered journalist's sons."""
 
     my_extractor.predict(sample)
     return sample
@@ -240,9 +255,26 @@ Yorgen Fenech of the Tumas Group talks with VIP guests during the opening of the
 
 Caruana Galizia, a well-known investigative journalist who wrote an anti-corruption blog, was killed by a car bomb near the Maltese capital Valletta in October 2017 - a murder that shocked Europe and raised questions about the rule of law on the Mediterranean island.
 
-The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed."""
+The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed.
+
+Investigators are following an alleged money trail between the suspected middleman and three men accused of killing the 53-year-old journalist, The Times of Malta reported.
+
+The men, who include two brothers, were charged with triggering the car bomb in December 2017.
+The trial is yet to take place.
+
+The government's decision regarding a presidential pardon is believed to have been discussed at a Cabinet meeting on Tuesday where some ministers were said to be reluctant to grant it.
+
+Muscat justified the decision in his statement, saying that "the government did what it had to do."
+
+"As I said from the start, I will leave no stone unturned in this case.
+There is no question of impunity for whoever is responsible for this crime," he added.
+
+In September a public inquiry was ordered into Daphne Caruana Galizia's murder, in response to recommendations made in a report by the Council of Europe - a non-EU human rights body with 47 member states.
+It said the failure of the Maltese authorities to bring perpetrators to trial raised serious questions about the rule of law on the island.
+
+The independence of the inquiry has been questioned by the murdered journalist's sons."""
     print(sample.index("Fenech is a director and co-owner of a business group that won"))
 
-    print ((sample[714:721]))
+    print ((sample[310:310+6]))
     
 
