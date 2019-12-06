@@ -158,14 +158,14 @@ class NERExtractor():
 
                     entity = {
                         "entity":entity_name,
-                        "entity_text":entity_text,
+                        "entity_text":entity_text.replace("\"","\\\""),
                         "start_index":start_index,
                         "entity_length":entity_len,
                         "proba":proba
                     }
                     predicted_entities.append(entity)
 
-        print (json.dumps(predicted_entities, sort_keys=True, indent=2) )
+        print (json.dumps(predicted_entities, sort_keys=True, indent=2))
         return json.dumps(predicted_entities, sort_keys=True, indent=2)
 
 
@@ -181,50 +181,15 @@ def test_main():
     my_extractor = NERExtractor()
     # for i in range (20,25):
     #     my_classifier.predict(test_texts[i])#, test_tags_path.split()
-    sample = """                Some Title
-An Australian academic freed by the Taliban in a prisoner swap has spoken of his "long and tortuous ordeal" as a hostage in Afghanistan.
+    sample = """HARTLEPOOL, England — It used to be simple in Hartlepool.
 
-Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia."""
-    sample = """Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia.
+Come election time, a majority of voters in this coastal working class town in the northeast of England would inevitably back the left-leaning Labour Party. Proud of its industrial history as a center for shipbuilding — the H.M.S. Trincomalee, Europe’s oldest floating warship, sits in the town’s windswept marina — this is still regarded a Labour heartland as the United Kingdom prepares for an election Dec. 12.
 
-Yorgen Fenech was detained after police intercepted his yacht off the Mediterranean island, sources with knowledge of the matter said.
+But old ties are being tested to their limits with a possibly devastating impact on Labour, which is fighting to defeat the ruling Conservative Party. Voters in Hartlepool feel they have missed out on the economic growth of the last few decades, which has transformed London and the southeast of England. This is the eastern edge of what pollsters have called the “red wall” of Brexit-supporting seats Labour holds with a majority of less than 8,000 votes.
 
-Fenech is a director and co-owner of a business group that won a large energy concession in 2013 from the Maltese state to build a gas power station on the island.
+And there’s another problem facing many traditional Labour voters here: the party’s leader, Jeremy Corbyn.
 
-His luxury yacht Gio left the Portomaso yacht marina, five miles (eight km) north of Valletta, shortly before dawn. Police swiftly boarded the vessel and forced it to return to port.
-
-A yacht, which is believed to have been intercepted by Maltese police to arrest prominent businessman Yorgen FenechHandout via REUTERS
-
-His arrest came the day after the government said it would offer a pardon to a suspected middleman in the 2017 murder of Caruana Galizia if he named the mastermind behind the killing.
-
-The middleman is believed to have linked the person suspected of commissioning her murder, to the men accused of carrying out the killing, as well as those who helped procure the explosive device used in the operation.
-
-The Prime Minister's Office said that the man "showed willingness, after some time of interrogation by the police, to collaborate" but that he "asked to be granted a presidential pardon first" for all the cases he might have been involved in.
-
-The island's leader added that after some negotiations with the man's lawyers, he drafted and signed a letter giving the suspect assurances that if he "gave all the information and evidence that he had, and if all this could be corroborated in court, I would recommend that this person be given a presidential pardon."
-
-Yorgen Fenech of the Tumas Group talks with VIP guests during the opening of the Oracle Casino in St Paul's Bay, Malta, June 4, 2014.REUTERS
-
-Caruana Galizia, a well-known investigative journalist who wrote an anti-corruption blog, was killed by a car bomb near the Maltese capital Valletta in October 2017 - a murder that shocked Europe and raised questions about the rule of law on the Mediterranean island.
-
-The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed.
-
-Investigators are following an alleged money trail between the suspected middleman and three men accused of killing the 53-year-old journalist, The Times of Malta reported.
-
-The men, who include two brothers, were charged with triggering the car bomb in December 2017.
-The trial is yet to take place.
-
-The government's decision regarding a presidential pardon is believed to have been discussed at a Cabinet meeting on Tuesday where some ministers were said to be reluctant to grant it.
-
-Muscat justified the decision in his statement, saying that "the government did what it had to do."
-
-"As I said from the start, I will leave no stone unturned in this case.
-There is no question of impunity for whoever is responsible for this crime," he added.
-
-In September a public inquiry was ordered into Daphne Caruana Galizia's murder, in response to recommendations made in a report by the Council of Europe - a non-EU human rights body with 47 member states.
-It said the failure of the Maltese authorities to bring perpetrators to trial raised serious questions about the rule of law on the island.
-
-The independence of the inquiry has been questioned by the murdered journalist's sons."""
+"I dont think he's a good leader," said Christine Scott, 57, as she prepared some herring for sale in Hodgson’s fishmongers, part of a family-owned business that’s been in Hartlepool for more than a century. “I'm not 100 percent sure about him.”"""
 
     my_extractor.predict(sample)
     return sample
@@ -232,48 +197,17 @@ The independence of the inquiry has been questioned by the murdered journalist's
 
 
 if __name__=='__main__':
-    # sample = test_main()
-    sample = """Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia.
+    sample = test_main()
+    sample = """HARTLEPOOL, England — It used to be simple in Hartlepool.
 
-Yorgen Fenech was detained after police intercepted his yacht off the Mediterranean island, sources with knowledge of the matter said.
+Come election time, a majority of voters in this coastal working class town in the northeast of England would inevitably back the left-leaning Labour Party. Proud of its industrial history as a center for shipbuilding — the H.M.S. Trincomalee, Europe’s oldest floating warship, sits in the town’s windswept marina — this is still regarded a Labour heartland as the United Kingdom prepares for an election Dec. 12.
 
-Fenech is a director and co-owner of a business group that won a large energy concession in 2013 from the Maltese state to build a gas power station on the island.
+But old ties are being tested to their limits with a possibly devastating impact on Labour, which is fighting to defeat the ruling Conservative Party. Voters in Hartlepool feel they have missed out on the economic growth of the last few decades, which has transformed London and the southeast of England. This is the eastern edge of what pollsters have called the “red wall” of Brexit-supporting seats Labour holds with a majority of less than 8,000 votes.
 
-His luxury yacht Gio left the Portomaso yacht marina, five miles (eight km) north of Valletta, shortly before dawn. Police swiftly boarded the vessel and forced it to return to port.
+And there’s another problem facing many traditional Labour voters here: the party’s leader, Jeremy Corbyn.
 
-A yacht, which is believed to have been intercepted by Maltese police to arrest prominent businessman Yorgen FenechHandout via REUTERS
+“I don’t think he’s a good leader,” said Christine Scott, 57, as she prepared some herring for sale in Hodgson’s fishmongers, part of a family-owned business that’s been in Hartlepool for more than a century. “I'm not 100 percent sure about him.”"""
 
-His arrest came the day after the government said it would offer a pardon to a suspected middleman in the 2017 murder of Caruana Galizia if he named the mastermind behind the killing.
-
-The middleman is believed to have linked the person suspected of commissioning her murder, to the men accused of carrying out the killing, as well as those who helped procure the explosive device used in the operation.
-
-The Prime Minister's Office said that the man "showed willingness, after some time of interrogation by the police, to collaborate" but that he "asked to be granted a presidential pardon first" for all the cases he might have been involved in.
-
-The island's leader added that after some negotiations with the man's lawyers, he drafted and signed a letter giving the suspect assurances that if he "gave all the information and evidence that he had, and if all this could be corroborated in court, I would recommend that this person be given a presidential pardon."
-
-Yorgen Fenech of the Tumas Group talks with VIP guests during the opening of the Oracle Casino in St Paul's Bay, Malta, June 4, 2014.REUTERS
-
-Caruana Galizia, a well-known investigative journalist who wrote an anti-corruption blog, was killed by a car bomb near the Maltese capital Valletta in October 2017 - a murder that shocked Europe and raised questions about the rule of law on the Mediterranean island.
-
-The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed.
-
-Investigators are following an alleged money trail between the suspected middleman and three men accused of killing the 53-year-old journalist, The Times of Malta reported.
-
-The men, who include two brothers, were charged with triggering the car bomb in December 2017.
-The trial is yet to take place.
-
-The government's decision regarding a presidential pardon is believed to have been discussed at a Cabinet meeting on Tuesday where some ministers were said to be reluctant to grant it.
-
-Muscat justified the decision in his statement, saying that "the government did what it had to do."
-
-"As I said from the start, I will leave no stone unturned in this case.
-There is no question of impunity for whoever is responsible for this crime," he added.
-
-In September a public inquiry was ordered into Daphne Caruana Galizia's murder, in response to recommendations made in a report by the Council of Europe - a non-EU human rights body with 47 member states.
-It said the failure of the Maltese authorities to bring perpetrators to trial raised serious questions about the rule of law on the island.
-
-The independence of the inquiry has been questioned by the murdered journalist's sons."""
-    print(sample.index("Fenech is a director and co-owner of a business group that won"))
 
     print ((sample[310:310+6]))
     

@@ -55,8 +55,11 @@ if __name__=='__main__':
 
     # print (np.vstack((np_list, np.array([]))))
     # print (my_array)
-    word1 = "hello"
-    word2 = "there"
-    print (' '.join([word1, word2]))
-    print (len(' '.join([word1])))
+    # word1 = "hello"
+    # word2 = "there"
+    # print (' '.join([word1, word2]))
+    # print (len(' '.join([word1])))
+    word="aaa\"bbb"
+    print(word.replace("\"","\\\""))
+    
     
