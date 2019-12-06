@@ -142,7 +142,7 @@ class NERExtractor():
             # print(np_sequences[k])
             for i,entity_name in enumerate(predicted_tags_seq):
                 if entity_name != self.config_dic["PAD_TAG"] and entity_name[0]=="B":
-                    start_index = len(' '.join(np_sequences[k][:i]))+ input.index(sent, sum([len(sentence) for h,sentence in enumerate(sents) if h<k]))
+                    start_index = len(' '.join(np_sequences[k][:i]))+1+ input.index(sent, sum([len(sentence) for h,sentence in enumerate(sents) if h<k]))
                     j = i+1
                     entity_len = len(np_sequences[k][i])
                     entity_text = np_sequences[k][i]
@@ -186,40 +186,27 @@ An Australian academic freed by the Taliban in a prisoner swap has spoken of his
 
 Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia."""
     sample = """Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia.
+
 Yorgen Fenech was detained after police intercepted his yacht off the Mediterranean island, sources with knowledge of the matter said.
+
 Fenech is a director and co-owner of a business group that won a large energy concession in 2013 from the Maltese state to build a gas power station on the island.
+
 His luxury yacht Gio left the Portomaso yacht marina, five miles (eight km) north of Valletta, shortly before dawn. Police swiftly boarded the vessel and forced it to return to port.
+
 A yacht, which is believed to have been intercepted by Maltese police to arrest prominent businessman Yorgen FenechHandout via REUTERS
+
 His arrest came the day after the government said it would offer a pardon to a suspected middleman in the 2017 murder of Caruana Galizia if he named the mastermind behind the killing.
+
 The middleman is believed to have linked the person suspected of commissioning her murder, to the men accused of carrying out the killing, as well as those who helped procure the explosive device used in the operation.
+
 The Prime Minister's Office said that the man "showed willingness, after some time of interrogation by the police, to collaborate" but that he "asked to be granted a presidential pardon first" for all the cases he might have been involved in.
+
 The island's leader added that after some negotiations with the man's lawyers, he drafted and signed a letter giving the suspect assurances that if he "gave all the information and evidence that he had, and if all this could be corroborated in court, I would recommend that this person be given a presidential pardon."
+
 Yorgen Fenech of the Tumas Group talks with VIP guests during the opening of the Oracle Casino in St Paul's Bay, Malta, June 4, 2014.REUTERS
+
 Caruana Galizia, a well-known investigative journalist who wrote an anti-corruption blog, was killed by a car bomb near the Maltese capital Valletta in October 2017 - a murder that shocked Europe and raised questions about the rule of law on the Mediterranean island.
-The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed.
-Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia.
-Yorgen Fenech was detained after police intercepted his yacht off the Mediterranean island, sources with knowledge of the matter said.
-Fenech is a director and co-owner of a business group that won a large energy concession in 2013 from the Maltese state to build a gas power station on the island.
-His luxury yacht Gio left the Portomaso yacht marina, five miles (eight km) north of Valletta, shortly before dawn. Police swiftly boarded the vessel and forced it to return to port.
-A yacht, which is believed to have been intercepted by Maltese police to arrest prominent businessman Yorgen FenechHandout via REUTERS
-His arrest came the day after the government said it would offer a pardon to a suspected middleman in the 2017 murder of Caruana Galizia if he named the mastermind behind the killing.
-The middleman is believed to have linked the person suspected of commissioning her murder, to the men accused of carrying out the killing, as well as those who helped procure the explosive device used in the operation.
-The Prime Minister's Office said that the man "showed willingness, after some time of interrogation by the police, to collaborate" but that he "asked to be granted a presidential pardon first" for all the cases he might have been involved in.
-The island's leader added that after some negotiations with the man's lawyers, he drafted and signed a letter giving the suspect assurances that if he "gave all the information and evidence that he had, and if all this could be corroborated in court, I would recommend that this person be given a presidential pardon."
-Yorgen Fenech of the Tumas Group talks with VIP guests during the opening of the Oracle Casino in St Paul's Bay, Malta, June 4, 2014.REUTERS
-Caruana Galizia, a well-known investigative journalist who wrote an anti-corruption blog, was killed by a car bomb near the Maltese capital Valletta in October 2017 - a murder that shocked Europe and raised questions about the rule of law on the Mediterranean island.
-The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed.
-Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia.
-Yorgen Fenech was detained after police intercepted his yacht off the Mediterranean island, sources with knowledge of the matter said.
-Fenech is a director and co-owner of a business group that won a large energy concession in 2013 from the Maltese state to build a gas power station on the island.
-His luxury yacht Gio left the Portomaso yacht marina, five miles (eight km) north of Valletta, shortly before dawn. Police swiftly boarded the vessel and forced it to return to port.
-A yacht, which is believed to have been intercepted by Maltese police to arrest prominent businessman Yorgen FenechHandout via REUTERS
-His arrest came the day after the government said it would offer a pardon to a suspected middleman in the 2017 murder of Caruana Galizia if he named the mastermind behind the killing.
-The middleman is believed to have linked the person suspected of commissioning her murder, to the men accused of carrying out the killing, as well as those who helped procure the explosive device used in the operation.
-The Prime Minister's Office said that the man "showed willingness, after some time of interrogation by the police, to collaborate" but that he "asked to be granted a presidential pardon first" for all the cases he might have been involved in.
-The island's leader added that after some negotiations with the man's lawyers, he drafted and signed a letter giving the suspect assurances that if he "gave all the information and evidence that he had, and if all this could be corroborated in court, I would recommend that this person be given a presidential pardon."
-Yorgen Fenech of the Tumas Group talks with VIP guests during the opening of the Oracle Casino in St Paul's Bay, Malta, June 4, 2014.REUTERS
-Caruana Galizia, a well-known investigative journalist who wrote an anti-corruption blog, was killed by a car bomb near the Maltese capital Valletta in October 2017 - a murder that shocked Europe and raised questions about the rule of law on the Mediterranean island.
+
 The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed."""
 
     my_extractor.predict(sample)
@@ -229,5 +216,31 @@ The arrest was carried out on Thursday morning during a Europol-backed operation
 
 if __name__=='__main__':
     sample = test_main()
-    print(sample[1062:1073])
+    sample = """Malta police arrested one of the country's most prominent businessmen on Wednesday in connection with an investigation into the murder of journalist Daphne Caruana Galizia.
+
+Yorgen Fenech was detained after police intercepted his yacht off the Mediterranean island, sources with knowledge of the matter said.
+
+Fenech is a director and co-owner of a business group that won a large energy concession in 2013 from the Maltese state to build a gas power station on the island.
+
+His luxury yacht Gio left the Portomaso yacht marina, five miles (eight km) north of Valletta, shortly before dawn. Police swiftly boarded the vessel and forced it to return to port.
+
+A yacht, which is believed to have been intercepted by Maltese police to arrest prominent businessman Yorgen FenechHandout via REUTERS
+
+His arrest came the day after the government said it would offer a pardon to a suspected middleman in the 2017 murder of Caruana Galizia if he named the mastermind behind the killing.
+
+The middleman is believed to have linked the person suspected of commissioning her murder, to the men accused of carrying out the killing, as well as those who helped procure the explosive device used in the operation.
+
+The Prime Minister's Office said that the man "showed willingness, after some time of interrogation by the police, to collaborate" but that he "asked to be granted a presidential pardon first" for all the cases he might have been involved in.
+
+The island's leader added that after some negotiations with the man's lawyers, he drafted and signed a letter giving the suspect assurances that if he "gave all the information and evidence that he had, and if all this could be corroborated in court, I would recommend that this person be given a presidential pardon."
+
+Yorgen Fenech of the Tumas Group talks with VIP guests during the opening of the Oracle Casino in St Paul's Bay, Malta, June 4, 2014.REUTERS
+
+Caruana Galizia, a well-known investigative journalist who wrote an anti-corruption blog, was killed by a car bomb near the Maltese capital Valletta in October 2017 - a murder that shocked Europe and raised questions about the rule of law on the Mediterranean island.
+
+The arrest was carried out on Thursday morning during a Europol-backed operation into money laundering, the statement from the Prime Minister's Office confirmed."""
+    print(sample.index("Fenech is a director and co-owner of a business group that won"))
+
+    print ((sample[0:172]))
+    
 

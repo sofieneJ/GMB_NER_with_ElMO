@@ -46,7 +46,7 @@ Malta police arrested one of the country's most prominent businessmen on Wednesd
     
 
 if __name__=='__main__':
-    test_server()
+    # test_server()
     # my_list = [1,2,3,4]
     # np_list= np.array(my_list)
     # my_array = np.empty((0,4))
@@ -55,4 +55,8 @@ if __name__=='__main__':
 
     # print (np.vstack((np_list, np.array([]))))
     # print (my_array)
+    # word1 = "hello"
+    # word2 = "there"
+    # print (' '.join([word1, word2]))
+    # print (len(' '.join([word1, word2])))
     
