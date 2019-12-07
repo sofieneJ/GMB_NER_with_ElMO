@@ -158,7 +158,7 @@ class NERExtractor():
 
                     entity = {
                         "entity":entity_name,
-                        "entity_text":entity_text.replace("\"","\\\""),
+                        "entity_text":entity_text.replace("\"","'"),
                         "start_index":start_index,
                         "entity_length":entity_len,
                         "proba":proba
@@ -181,15 +181,19 @@ def test_main():
     my_extractor = NERExtractor()
     # for i in range (20,25):
     #     my_classifier.predict(test_texts[i])#, test_tags_path.split()
-    sample = """HARTLEPOOL, England — It used to be simple in Hartlepool.
+    sample = """HARTLEPOOL, England - It used to be simple in Hartlepool.
 
-Come election time, a majority of voters in this coastal working class town in the northeast of England would inevitably back the left-leaning Labour Party. Proud of its industrial history as a center for shipbuilding — the H.M.S. Trincomalee, Europe’s oldest floating warship, sits in the town’s windswept marina — this is still regarded a Labour heartland as the United Kingdom prepares for an election Dec. 12.
+Come election time, a majority of voters in this coastal working class town in the northeast of England would inevitably back the left-leaning Labour Party.
+Proud of its industrial history as a center for shipbuilding - the H.M.S. Trincomalee, Europe's oldest floating warship, sits in the town's windswept marina - this is still regarded a Labour heartland as the United Kingdom prepares for an election Dec.
+12.
 
-But old ties are being tested to their limits with a possibly devastating impact on Labour, which is fighting to defeat the ruling Conservative Party. Voters in Hartlepool feel they have missed out on the economic growth of the last few decades, which has transformed London and the southeast of England. This is the eastern edge of what pollsters have called the “red wall” of Brexit-supporting seats Labour holds with a majority of less than 8,000 votes.
+But old ties are being tested to their limits with a possibly devastating impact on Labour, which is fighting to defeat the ruling Conservative Party.
+Voters in Hartlepool feel they have missed out on the economic growth of the last few decades, which has transformed London and the southeast of England.
+This is the eastern edge of what pollsters have called the "red wall" of Brexit-supporting seats Labour holds with a majority of less than 8,000 votes.
 
-And there’s another problem facing many traditional Labour voters here: the party’s leader, Jeremy Corbyn.
+And there's another problem facing many traditional Labour voters here: the party's leader, Jeremy Corbyn.
 
-"I dont think he's a good leader," said Christine Scott, 57, as she prepared some herring for sale in Hodgson’s fishmongers, part of a family-owned business that’s been in Hartlepool for more than a century. “I'm not 100 percent sure about him.”"""
+"I don't think he's a good leader," said Christine Scott, 57, as she prepared some herring for sale in Hodgson's fishmongers, part of a family-owned business that's been in Hartlepool for more than a century. "I'm not 100 percent sure about him.\""""
 
     my_extractor.predict(sample)
     return sample
@@ -198,16 +202,19 @@ And there’s another problem facing many traditional Labour voters here: the pa
 
 if __name__=='__main__':
     sample = test_main()
-    sample = """HARTLEPOOL, England — It used to be simple in Hartlepool.
+    sample = """HARTLEPOOL, England - It used to be simple in Hartlepool.
 
-Come election time, a majority of voters in this coastal working class town in the northeast of England would inevitably back the left-leaning Labour Party. Proud of its industrial history as a center for shipbuilding — the H.M.S. Trincomalee, Europe’s oldest floating warship, sits in the town’s windswept marina — this is still regarded a Labour heartland as the United Kingdom prepares for an election Dec. 12.
+Come election time, a majority of voters in this coastal working class town in the northeast of England would inevitably back the left-leaning Labour Party.
+Proud of its industrial history as a center for shipbuilding - the H.M.S. Trincomalee, Europe's oldest floating warship, sits in the town's windswept marina - this is still regarded a Labour heartland as the United Kingdom prepares for an election Dec.
+12.
 
-But old ties are being tested to their limits with a possibly devastating impact on Labour, which is fighting to defeat the ruling Conservative Party. Voters in Hartlepool feel they have missed out on the economic growth of the last few decades, which has transformed London and the southeast of England. This is the eastern edge of what pollsters have called the “red wall” of Brexit-supporting seats Labour holds with a majority of less than 8,000 votes.
+But old ties are being tested to their limits with a possibly devastating impact on Labour, which is fighting to defeat the ruling Conservative Party.
+Voters in Hartlepool feel they have missed out on the economic growth of the last few decades, which has transformed London and the southeast of England.
+This is the eastern edge of what pollsters have called the "red wall" of Brexit-supporting seats Labour holds with a majority of less than 8,000 votes.
 
-And there’s another problem facing many traditional Labour voters here: the party’s leader, Jeremy Corbyn.
+And there's another problem facing many traditional Labour voters here: the party's leader, Jeremy Corbyn.
 
-“I don’t think he’s a good leader,” said Christine Scott, 57, as she prepared some herring for sale in Hodgson’s fishmongers, part of a family-owned business that’s been in Hartlepool for more than a century. “I'm not 100 percent sure about him.”"""
-
+"I don't think he's a good leader," said Christine Scott, 57, as she prepared some herring for sale in Hodgson's fishmongers, part of a family-owned business that's been in Hartlepool for more than a century. "I'm not 100 percent sure about him.\""""
 
     print ((sample[310:310+6]))
     
