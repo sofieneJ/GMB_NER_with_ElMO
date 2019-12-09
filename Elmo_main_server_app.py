@@ -53,7 +53,8 @@ def build_model(pretrained_ElMO_module, max_seq_len, num_tags, batch_size):
 #     x = add([x, x_rnn])  # residual connection to the first biLSTM
     out = TimeDistributed(Dense(num_tags, activation="softmax"))(x2)
     model = Model(input_text, out)
-    model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+    # model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+    model.compile(optimizer=Adam(learning_rate=0.0005), loss="categorical_crossentropy", metrics=["accuracy"])
     print (model.summary())
     return model
 
@@ -270,6 +271,11 @@ class NERExtractor():
         with self.graph.as_default():
             with self.session.as_default():
                 self.model.save_weights(re_trained_model_path)
+
+
+        print ("---------------archiving learning sample----------------")
+        data_cleaner = DataCleaner(os.path.realpath('./new_training_data/archived_data/'))
+        data_cleaner.archive_sample(self.retraining_text_seq_path, self.retraining_tags_seq_path)
         
         return json.dumps(history.history, cls=NumpyEncoder, sort_keys=True, indent=2)
         
