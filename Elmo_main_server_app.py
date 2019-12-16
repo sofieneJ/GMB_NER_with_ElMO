@@ -264,7 +264,7 @@ class NERExtractor():
         with self.graph.as_default():
             with self.session.as_default():
                 history = self.model.fit(batch_np_sequences, batch_np_cat_tags, validation_data=(batch_np_sequences, batch_np_cat_tags), batch_size=batch_size, 
-                                epochs=1, validation_split=0.2, verbose=1)
+                                epochs=2, validation_split=0.2, verbose=1)
         print(f'It took {time()- t0} seconds to retrain the model')
         
         re_trained_model_path =  os.path.realpath("./models/ElMO/retrained_ElMo_BiLSTM_keras.h5")
