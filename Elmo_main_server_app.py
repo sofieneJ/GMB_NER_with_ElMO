@@ -71,15 +71,20 @@ def pad_word_sequence (Corpus, max_seq_len, pad_word):
   return padded_corpus
 
 class NERExtractor():
-    def __init__(self):
+    def __init__(self, appName):
         
         pretrained_ElMO_path =  os.path.realpath("../pretrained_models/hub_elmo/")
-        trained_model_path =  os.path.realpath("./models/ElMO/ElMo_BiLSTM_keras.h5")
-        tags_dic_path = os.path.realpath('./models/ElMO/tags_dic.json')
-        model_config_path = os.path.realpath('./models/ElMO/model_config.json')        
-        taxonomy_map_path = os.path.realpath('./models/ElMO/taxonomy_mapping.json')
-        self.retraining_text_seq_path = os.path.realpath('./new_training_data/hot_folder/text_sequences.txt')
-        self.retraining_tags_seq_path = os.path.realpath('./new_training_data/hot_folder/tags_sequences.txt')
+
+        trained_model_path =  f"./models/ElMO/{appName}/ElMo_BiLSTM_keras.h5"
+        retrained_model_path = f"./models/ElMO/{appName}/retrained_ElMo_BiLSTM_keras.h5"
+        self.retrained_model_path =  os.path.realpath(retrained_model_path)
+        
+        tags_dic_path = os.path.realpath(f"./models/ElMO/{appName}/tags_dic.json")
+        model_config_path = os.path.realpath(f"./models/ElMO/{appName}/model_config.json")        
+        taxonomy_map_path = os.path.realpath(f"./models/ElMO/{appName}/taxonomy_mapping.json")
+
+        self.retraining_text_seq_path = os.path.realpath(f"./new_training_data/{appName}/hot_folder/text_sequences.txt")
+        self.retraining_tags_seq_path = os.path.realpath(f"./new_training_data/{appName}/hot_folder/tags_sequences.txt")
 
         with open(tags_dic_path, 'r') as f:
             self.tags2idx=json.load(f)
@@ -88,6 +93,7 @@ class NERExtractor():
         with open(taxonomy_map_path, 'r') as f:
             self.taxo_map = json.load(f)
 
+        self.appName=appName
         self.session = tf.compat.v1.Session()
         self.graph = tf.compat.v1.get_default_graph()
 
@@ -96,7 +102,11 @@ class NERExtractor():
                 pretrained_elmo_model = hub.Module(spec=pretrained_ElMO_path, trainable=True)
                 self.model = build_model(pretrained_ElMO_module=pretrained_elmo_model, max_seq_len=self.config_dic["max_seq_len"], 
                                         num_tags=len(self.tags2idx), batch_size=self.config_dic["batch_size"])
-                self.model.load_weights(trained_model_path)
+                if (os.path.exists(trained_model_path)):
+                    self.model.load_weights(os.path.realpath(trained_model_path))
+                elif (os.path.exists(retrained_model_path)):
+                    self.model.load_weights(os.path.realpath(retrained_model_path))
+                    
                                         
         self.idx2tag = {idx:tag for tag,idx in self.tags2idx.items()} 
 
@@ -267,10 +277,9 @@ class NERExtractor():
                                 epochs=2, validation_split=0.2, verbose=1)
         print(f'It took {time()- t0} seconds to retrain the model')
         
-        re_trained_model_path =  os.path.realpath("./models/ElMO/retrained_ElMo_BiLSTM_keras.h5")
         with self.graph.as_default():
             with self.session.as_default():
-                self.model.save_weights(re_trained_model_path)
+                self.model.save_weights(self.retrained_model_path)
 
 
         print ("---------------archiving learning sample----------------")

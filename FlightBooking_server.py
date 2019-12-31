@@ -4,10 +4,11 @@ from Elmo_main_server_app import *
 from flask import Flask
 from flask import request
 
+
 app = Flask(__name__)
-extractor = NERExtractor()
+extractor = NERExtractor(appName="FlightBooking")  
 app.logger.info('Main class instanciated')
-# graph = tf.get_default_graph()
+
 
 @app.route('/')
 def hello_world():
@@ -38,3 +39,5 @@ def retrain():
         return 'You sent a GET message'
 
     print(request)
+
+
