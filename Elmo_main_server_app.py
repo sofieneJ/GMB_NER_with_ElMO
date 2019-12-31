@@ -73,7 +73,7 @@ def pad_word_sequence (Corpus, max_seq_len, pad_word):
 class NERExtractor():
     def __init__(self):
         
-        pretrained_ElMO_path =  os.path.realpath("./models/ElMO/hub_elmo/")
+        pretrained_ElMO_path =  os.path.realpath("../pretrained_models/hub_elmo/")
         trained_model_path =  os.path.realpath("./models/ElMO/ElMo_BiLSTM_keras.h5")
         tags_dic_path = os.path.realpath('./models/ElMO/tags_dic.json')
         model_config_path = os.path.realpath('./models/ElMO/model_config.json')        
@@ -88,8 +88,8 @@ class NERExtractor():
         with open(taxonomy_map_path, 'r') as f:
             self.taxo_map = json.load(f)
 
-        self.session = tf.Session()
-        self.graph = tf.get_default_graph()
+        self.session = tf.compat.v1.Session()
+        self.graph = tf.compat.v1.get_default_graph()
 
         with self.graph.as_default():
             with self.session.as_default():
@@ -307,7 +307,7 @@ It hasn't."""
 
 
 
-def test_main():
+def test_predict():
 
     # test_corpus_path = './temp_data/test_copus.txt'
     # with open(test_corpus_path, "r", encoding = "utf8") as f:
@@ -333,14 +333,14 @@ And there's another problem facing many traditional Labour voters here: the part
 
 "I don't think he's a good leader," said Christine Scott, 57, as she prepared some herring for sale in Hodgson's fishmongers, part of a family-owned business that's been in Hartlepool for more than a century. "I'm not 100 percent sure about him.\""""
 
-    my_extractor.predict(sample)
-    return sample
+    
+    return my_extractor.predict(sample)
 
 
 
 if __name__=='__main__':
-    # sample = test_main()
-    test_retrain()
+    sample = test_predict()
+    # test_retrain()
 
 
     # taxonomy_dic = {
