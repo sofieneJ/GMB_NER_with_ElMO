@@ -71,7 +71,7 @@ def pad_word_sequence (Corpus, max_seq_len, pad_word):
   return padded_corpus
 
 class NERExtractor():
-    def __init__(self, appName):
+    def __init__(self, appName, bLoadFromRetrained):
         
         pretrained_ElMO_path =  os.path.realpath("../pretrained_models/hub_elmo/")
 
@@ -102,10 +102,14 @@ class NERExtractor():
                 pretrained_elmo_model = hub.Module(spec=pretrained_ElMO_path, trainable=True)
                 self.model = build_model(pretrained_ElMO_module=pretrained_elmo_model, max_seq_len=self.config_dic["max_seq_len"], 
                                         num_tags=len(self.tags2idx), batch_size=self.config_dic["batch_size"])
-                if (os.path.exists(trained_model_path)):
-                    self.model.load_weights(os.path.realpath(trained_model_path))
-                elif (os.path.exists(retrained_model_path)):
+                if (os.path.exists(retrained_model_path) and bLoadFromRetrained==True):
                     self.model.load_weights(os.path.realpath(retrained_model_path))
+                    print (f"INFO: I loaded retrained model from {retrained_model_path}")
+                elif (os.path.exists(trained_model_path)):
+                    self.model.load_weights(os.path.realpath(trained_model_path))
+                    print (f"INFO: I loaded pretrained model from {trained_model_path}")
+                else:
+                    print (f"INFO: I did not load pretrained weights")
                     
                                         
         self.idx2tag = {idx:tag for tag,idx in self.tags2idx.items()} 

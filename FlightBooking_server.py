@@ -6,7 +6,7 @@ from flask import request
 
 
 app = Flask(__name__)
-extractor = NERExtractor(appName="FlightBooking")  
+extractor = NERExtractor(appName="FlightBooking", bLoadFromRetrained=True)  
 app.logger.info('Main class instanciated')
 
 
