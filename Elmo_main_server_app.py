@@ -102,8 +102,20 @@ class NERExtractor():
         self.session = tf.compat.v1.Session()
         self.graph = tf.compat.v1.get_default_graph()
 
+        class myCallback(tf.keras.callbacks.Callback):
+            def __init__(self, acc_thres, **kwargs):
+                self.acc_thres = acc_thres
+                super(myCallback, self).__init__(**kwargs)
+
+            def on_epoch_end(self, epoch, logs={}):
+                if (logs.get('val_accuracy')>self.acc_thres):
+                    print(f"Reached {self.acc_thres} accuracy so stopping the training!")
+                    self.model.stop_training = True
+
+
         with self.graph.as_default():
             with self.session.as_default():
+                self.accuracy_training_callback = myCallback(acc_thres = self.config_dic["archive_retraining_acc_thres"])
                 pretrained_elmo_model = hub.Module(spec=pretrained_ElMO_path, trainable=True)
                 self.model = build_model(pretrained_ElMO_module=pretrained_elmo_model, max_seq_len=self.config_dic["max_seq_len"], 
                                         num_tags=len(self.tags2idx), batch_size=self.config_dic["batch_size"], learning_rate=self.config_dic["learning_rate"])
@@ -336,7 +348,7 @@ class NERExtractor():
         with self.graph.as_default():
             with self.session.as_default():
                 history = self.model.fit(batch_np_sequences, batch_np_cat_tags, validation_data=(batch_np_sequences, batch_np_cat_tags), batch_size=batch_size, 
-                                epochs=retraining_epochs, validation_split=0.2, verbose=1)
+                                epochs=retraining_epochs, validation_split=0.2, verbose=1, callbacks=[self.accuracy_training_callback])
         print(f'It took {time()- t0} seconds to retrain the model')
         
         with self.graph.as_default():
