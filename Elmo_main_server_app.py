@@ -295,12 +295,14 @@ class NERExtractor():
         
 
 def test_extract_FB ():
-    text="""I would like to travel from Paris to Berlin from 1st January 2019 to 24th January 2020.
-I would like to fly from Rome to Munich from 2nd March 2020 to 24th June 2020.
-I want to book a flight to London from Paris from 3rd February 2020 to 15th Mai 2020.
-I want to travel to Bucharest from Madrid from 06/01/2020 to 02/04/2020.
-I am willing to fly from Bucharest to Barcelona from 03/03/2020 to 07/07/2020.
-I wish to travel from Porto to Marseille from 4th April 2020 to 6th August 2020."""
+    text="""I want to travel from Paris to Berlin from 2nd February 2020 to 5th March 2020.
+I want to travel to Berlin from Barcelona from 2nd February 2020 to 5th March 2020.
+I want to travel to London from New York from 2nd March 2020 to 22th June 2020.
+I want to travel to New York from San Francisco from 2nd July 2020 to 22th August 2020.
+I want to travel to New York from San Francisco from 2nd July 2020 to 22th August 2020.
+I would like to fly from Los Angeles to Miami from 15th March 2020 to 20th June 2020.
+I would like to fly from New York to Seoul from 5th July 2020 to 20th September 2020.
+I would like to travel to Paris from Miami from 15th March 2020 to 20/10/2020."""
     my_extractor = NERExtractor(appName="FlightBooking")
     my_extractor.predict(text)
 
