@@ -143,10 +143,11 @@ class NERExtractor():
             if len(sents_batch) < batch_size:
                 batch_pad = np.array([[PAD_WORD for _ in range (0, max_seq_len)] for _ in range(0,batch_size-len(sents_batch))])
                 batch_np_sequences = np.vstack((batch_np_sequences,batch_pad))
-
+            t0 = time()
             with self.graph.as_default():
                 with self.session.as_default():
                     p = self.model.predict(batch_np_sequences, batch_size=batch_size)
+            print(f'It took the model {time()- t0} seconds to infer the extraction')
             batch_predictions = np.argmax(p, axis=-1)
             batch_probas = np.max(p, axis=-1)
 
