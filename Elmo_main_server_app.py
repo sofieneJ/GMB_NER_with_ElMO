@@ -30,7 +30,7 @@ from time import time
 from nltk.tokenize import sent_tokenize
 
 
-def build_model(pretrained_ElMO_module, max_seq_len, num_tags, batch_size):    
+def build_model(pretrained_ElMO_module, max_seq_len, num_tags, batch_size, learning_rate):    
  
     def ElmoEmbedding(x):
         return pretrained_ElMO_module(inputs={
@@ -54,7 +54,7 @@ def build_model(pretrained_ElMO_module, max_seq_len, num_tags, batch_size):
     out = TimeDistributed(Dense(num_tags, activation="softmax"))(x2)
     model = Model(input_text, out)
     # model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-    model.compile(optimizer=Adam(learning_rate=0.0005), loss="categorical_crossentropy", metrics=["accuracy"])
+    model.compile(optimizer=Adam(learning_rate=learning_rate), loss="categorical_crossentropy", metrics=["accuracy"])
     print (model.summary())
     return model
 
@@ -101,7 +101,7 @@ class NERExtractor():
             with self.session.as_default():
                 pretrained_elmo_model = hub.Module(spec=pretrained_ElMO_path, trainable=True)
                 self.model = build_model(pretrained_ElMO_module=pretrained_elmo_model, max_seq_len=self.config_dic["max_seq_len"], 
-                                        num_tags=len(self.tags2idx), batch_size=self.config_dic["batch_size"])
+                                        num_tags=len(self.tags2idx), batch_size=self.config_dic["batch_size"], learning_rate=self.config_dic["learning_rate"])
                 if (os.path.exists(retrained_model_path) and bLoadFromRetrained==True):
                     self.model.load_weights(os.path.realpath(retrained_model_path))
                     print (f"INFO: I loaded retrained model from {retrained_model_path}")
