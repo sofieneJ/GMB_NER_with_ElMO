@@ -6,7 +6,7 @@ from flask import request
 
 
 app = Flask(__name__)
-extractor = NERExtractor(appName="GMB", bLoadFromRetrained=False)  
+extractor = NERExtractor(appName="GMB")  
 app.logger.info('Main class instanciated')
 
 
