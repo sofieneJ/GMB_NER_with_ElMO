@@ -33,15 +33,15 @@ class DataCleaner ():
         archive_text_seq_file = os.path.join(self.archive_folder, text_sequence_filename)
         archive_tags_seq_file = os.path.join(self.archive_folder, tags_sequence_filename)
         
-        hot_file_text = open(retraining_text_seq_path, "r")
+        hot_file_text = open(retraining_text_seq_path, "r", encoding="utf-8")
         hot_file_tags = open(retraining_tags_seq_path, "r")
         sample_text_seqs = hot_file_text.readlines()
         sample_tags_seqs = hot_file_tags.readlines()
 
-        with open(archive_text_seq_file, "r") as f:
+        with open(archive_text_seq_file, "r", encoding="utf-8") as f:
             archive_text_seqs = f.readlines()
         
-        archive_file_text = open(archive_text_seq_file, "a+")
+        archive_file_text = open(archive_text_seq_file, "a+", encoding="utf-8")
         archive_file_tags = open(archive_tags_seq_file, "a+")
         
 
@@ -55,7 +55,7 @@ class DataCleaner ():
         archive_file_text.close()
         archive_file_tags.close()
 
-        open(retraining_text_seq_path, "w").close()
+        open(retraining_text_seq_path, "w", encoding="utf-8").close()
         open(retraining_tags_seq_path, "w").close()
 
 
