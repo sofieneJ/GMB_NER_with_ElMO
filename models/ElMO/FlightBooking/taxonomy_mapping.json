@@ -1,0 +1,6 @@
+{
+  "FlightRequest.FlightRequest.Request.DepartureCity": "-dc",
+  "FlightRequest.FlightRequest.Request.ArrivalCity": "-ac",
+  "FlightRequest.FlightRequest.Request.DepartureDate": "-dt",
+  "FlightRequest.FlightRequest.Request.ArrivalDate": "-at"
+}

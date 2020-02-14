@@ -1,0 +1,7 @@
+{
+  "NewsArticle.Politics.article.GeographicEntity": "-geo",
+  "NewsArticle.Politics.article.GeopoliticalEntity": "-gpe",
+  "NewsArticle.Politics.article.Organization": "-org",
+  "NewsArticle.Politics.article.Person": "-per",
+  "NewsArticle.Politics.article.TimeOrDate": "-tim"
+}

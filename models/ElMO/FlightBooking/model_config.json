@@ -1,0 +1,14 @@
+{
+  "PAD_TAG": "O",
+  "PAD_WORD": "ENDPAD",
+  "batch_size": 8,
+  "max_seq_len": 64,
+  "min_seq_len":2,
+  "retraining_batch_threshold":4,
+  "retraining_epochs":10,
+  "learning_rate":0.001,
+  "archive_retraining_epochs":10,
+  "initial_weights":"archive",
+  "_comment" : " for initial_weights, accepted values are archive, pretrained, retrained, None",
+  "retraining_acc_thres":0.997
+}

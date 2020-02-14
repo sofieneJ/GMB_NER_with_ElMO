@@ -2,7 +2,8 @@ models/ElMO/hub_elmo
 temp_data/
 new_training_data/
 *.h5
-*.json
+launch.json
+tags_dic.json
 *.zip
 *.pyc
 *.bat

@@ -140,9 +140,10 @@ class NERExtractor():
         max_seq_len = self.config_dic["max_seq_len"]
         PAD_WORD = self.config_dic['PAD_WORD']
         batch_size = self.config_dic['batch_size']
+        min_seq_len = self.config_dic["min_seq_len"]  
         
         sents = sent_tokenize(input)
-        sents = [sent for sent in sents if len(sent.split())<max_seq_len]
+        sents = [sent for sent in sents if len(sent.split())<max_seq_len and len(sent.split())>min_seq_len]
         nb_sentences = len(sents)
         assert (nb_sentences>0)
 
@@ -233,9 +234,10 @@ class NERExtractor():
                     tags_list.append(my_tag)
         
         max_seq_len = self.config_dic["max_seq_len"]  
+        min_seq_len = self.config_dic["min_seq_len"]  
         
         sents = sent_tokenize(text)
-        sents = [sent for sent in sents if len(sent.split())<max_seq_len]
+        sents = [sent for sent in sents if len(sent.split())<max_seq_len and len(sent.split())>min_seq_len]
         nb_sentences = len(sents)
 
         nb_hits = 0
@@ -253,7 +255,7 @@ class NERExtractor():
                     tag_sequence.append("O")
              
             with open(self.retraining_text_seq_path,"a", encoding="utf-8") as f:
-                f.write(sent)
+                f.write(sent.replace('\n',' '))
                 f.write("\n")
             with open(self.retraining_tags_seq_path,"a") as f:
                 f.write(','.join(tag_sequence))
@@ -328,6 +330,21 @@ class NERExtractor():
         batch_size = self.config_dic['batch_size']
         retraining_epochs = self.config_dic["archive_retraining_epochs"]
 
+        tagged_sequences = list(filter (lambda seq: any([True if tag.strip() != 'O' else False for tag in seq[1]]), list(zip(corpus,tags))))
+        corpus = [seq[0] for seq in tagged_sequences]
+        tags = [seq[1] for seq in tagged_sequences]
+
+        # zipped_seqs = zip(corpus, tags) 
+        # corpus = []
+        # tags = []
+        # for pair in zipped_seqs:
+        #     tags = pair[1]
+        #     hasNonTrivialTags = any([True if tag.strip() != 'O' else False for tag in tags])
+        #     if hasNonTrivialTags:
+        #         corpus.append(pair[0])
+        #         tags.append(pair[1])
+
+
         batch_np_sequences = np.array(pad_word_sequence(corpus, max_seq_len, PAD_WORD))
         if batch_np_sequences.shape[0] % batch_size != 0:
             batch_pad = np.array([[PAD_WORD for _ in range (0, max_seq_len)] for _ in range(0,batch_size-(batch_np_sequences.shape[0] % batch_size))])
@@ -382,15 +399,25 @@ I wish to travel from Porto to Marseille from 4th April 2020 to 6th August 2020.
     my_extractor.retrain(text,validation_results)
     
 def test_retrain_EAP ():
-    text="""Dear Sir/Madam: The Revere Consumer Affairs Ofﬁce is part of a network of eighteen Local Consumer Programs throughout Massachusetts working in cooperation with the Massachusetts Ofﬁce of the Attorney General to resolve disputes between consumers and businesses through a voluntary mediation process.
-This ofﬁce received the enclosed complaint which has been ﬁled against your business.
-é/i'fcfd/If/a ﬂi'au'vy-éa/l In order to facilitate the mediation process and to ensure that we have all the facts, we ask that you complete the enclosed Merchant Response Form and return it to us within ten (10) days, along with copies of any documentation you think may be helpful in attempting to resolve the dispute.
-Please do not send originals as your documents will not be returned to you.
-If you prefer to respond by telephone, please call us at 781-286-8] 14.
-Thank you for your anticipated cooperation.
-A mediator will be contacting you as soon as possible regarding this consumer's complaint.
-Sincerely, ."""
-    validation_results = """{"DocumentId":"sample_637142725493918410.pdf","ResultsVersion":1,"ResultsDocument":{"Bounds":{"StartPage":0,"PageCount":1,"TextStartIndex":0,"TextLength":1001},"Language":"","DocumentGroup":"EAP","DocumentCategory":"ComenityBankLetter","DocumentTypeId":"EAP.ComenityBankLetter.ConsumerAffair","DocumentTypeName":"ConsumerAffair","DocumentTypeDataVersion":0,"DataVersion":1,"DocumentTypeSource":"Automatic","DocumentTypeField":{"Components":[],"Value":"ConsumerAffair","Reference":{"TextStartIndex":0,"TextLength":0,"Tokens":[]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},"Fields":[{"FieldId":"EAP.ComenityBankLetter.ConsumerAffair.deadline","FieldName":"deadline","FieldType":"Text","IsMissing":false,"DataSource":"ManuallyChanged","Values":[{"Components":[],"Value":"ten (10) days,","Reference":{"TextStartIndex":589,"TextLength":14,"Tokens":[{"TextStartIndex":589,"TextLength":14,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[254.09,408.1368,15.0254,11.04],[254.09,425.6242,17.7633,11.04],[254.09,445.9157,23.0405,11.04]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0}],"DataVersion":1}]}}"""
+    text="""Dear Sir and/or Madam: I am writing on behalf of Nicholas Galletti, who ﬁled a complaint with our ofﬁce regarding the enclosed June 27, 2019 billing statement from COmenity Bank for his Alphaeon credit card.
+The billing statement indicates he owes a balance of $702.05, to be due on July 20, 2019.
+The credit card payments are to pay off a medical bill.
+MI. Galletti is protesting this charge, as his June 10, 2019 statement indicates that he owed $1,200, to be due on June 20, 2019.
+Mr. Galletti states that he made the payment of $1,200 on June 14, 2019, and believes his account should have a zero balance. . . . . ~ , Mr.
+Galletti states that he paid each bill monthly in advance of the due date.
+He States that he cantacted Comenity Bank representatives, who notiﬁed him that the new balance was for charged interest because his bill was late.
+He states that the representatives told him the ﬁnal bill was due on June 6, 2019.
+Mr. Galletti points out that the enclosed June 10, 2019 statement indicates that the $1,200 balance had a June 20, 2019 due date, which is contradictory information than the information provided by the representatives, and that his payment was, in fact, made before the due date.
+1 ask that Comenity Bank review Mr.
+Galletti's account, remove the charges since he paid the bill off in advance of the due date indicated on the statement, and provide a zero balance statement.
+If this request cannot be granted, please provide a detailed written explanation, including the portion of Mr.
+Galletti's credit card agreement indicating that the ﬁnal payment was due on June 6, 2019, and information indicating how the charges were calculated.
+1 ask for a written reply to my attention within 30 calendar days via fax at (518) 650-9365 or by mail to Matthew Corvin, Ofﬁce of the Attorney General, Health Care Bureau.
+The Capitol, Albany, NY 122240341.
+If you have any questions, feel free to contact me at (518) 776-2473.
+Thank you for your attention to this matter.
+Very truly yours,"""
+    validation_results = """{"DocumentId":"0707_001_ocr_text_v.pdf","ResultsVersion":1,"ResultsDocument":{"Bounds":{"StartPage":0,"PageCount":1,"TextStartIndex":0,"TextLength":2009},"Language":"","DocumentGroup":"EAP","DocumentCategory":"ComenityBankLetter","DocumentTypeId":"EAP.ComenityBankLetter.ConsumerAffair","DocumentTypeName":"ConsumerAffair","DocumentTypeDataVersion":0,"DataVersion":1,"DocumentTypeSource":"Automatic","DocumentTypeField":{"Components":[],"Value":"ConsumerAffair","Reference":{"TextStartIndex":0,"TextLength":0,"Tokens":[]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},"Fields":[{"FieldId":"EAP.ComenityBankLetter.ConsumerAffair.deadline","FieldName":"deadline","FieldType":"Text","IsMissing":false,"DataSource":"Manual","Values":[{"Components":[],"Value":"30 calendar days","Reference":{"TextStartIndex":1718,"TextLength":16,"Tokens":[{"TextStartIndex":1718,"TextLength":16,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[530.62,283.727,11.2277,11.04],[530.62,297.3835,38.5517,11.04],[530.62,338.4302,20.3909,11.04]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0}],"DataVersion":1}]}}"""
     my_extractor = NERExtractor(appName="EAP")
     my_extractor.retrain(text,validation_results)
 
@@ -414,21 +441,45 @@ This is the eastern edge of what pollsters have called the "red wall" of Brexit-
 And there's another problem facing many traditional Labour voters here: the party's leader, Jeremy Corbyn.
 
 "I don't think he's a good leader," said Christine Scott, 57, as she prepared some herring for sale in Hodgson's fishmongers, part of a family-owned business that's been in Hartlepool for more than a century. "I'm not 100 percent sure about him.\""""
-
-    
     return my_extractor.predict(sample)
 
+def test_retrain_GMB():
+
+    text = """(Bloomberg) -- China took action on two fronts to gain control of the spiraling coronavirus outbreak gripping the country: reporting a dramatic increase in cases and ousting top officials who failed to check the disease's expansion.
+
+The moves came within hours of each other Thursday.
+First, health authorities revealed that cases in Hubei province, where the disease first emerged, had surged by 45% to almost 50,000 after they included a new group of patients.
+That raised the global tally to almost 60,000, dashing hopes that the epidemic might be easing.
+
+Then, authorities announced the replacement of the two most senior Communist Party officials in Hubei and its hard-hit capital, Wuhan.
+Shanghai Mayor Ying Yong -- a former top judge who once served under President Xi Jinping -- was named to replace embattled provincial boss, Jiang Chaoliang.
+
+The shakeup represented the biggest political fallout yet from an outbreak that has in a little over two months shaken confidence in China's leaders and caused countries from the U.S. to Japan to restrict or block visits by its citizens.
+The decision on the heels of the expanded case tally was reminiscent of a boardroom reset, in which bad numbers are disclosed first to give the new team a clean slate.
+
+"First of all, they are trying to clean up the backlog of untested people who haven't been confirmed," said Ether Yin, partner at Beijing-based consulting firm Trivium China. "It's politically important for them to get the number right before the new party boss comes in, so that all the new confirmed cases happened under Jiang Chaoliang's watch.
+The new party secretary needs a new starting line."
+
+The surprise revision came amid mounting speculation that China was undercounting cases of the new coronavirus strain, as countries around the world struggle to contain a disease that appears to spread when patients show only mild symptoms.
+Daily declines in new cases in Hubei earlier this week helped push U.S. equity markets to record highs on Wednesday."""
+    validation_results="""{"DocumentId":"china_virus_v.pdf","ResultsVersion":1,"ResultsDocument":{"Bounds":{"StartPage":0,"PageCount":1,"TextStartIndex":0,"TextLength":2020},"Language":"","DocumentGroup":"NewsArticle","DocumentCategory":"Politics","DocumentTypeId":"NewsArticle.Politics.article","DocumentTypeName":"article","DocumentTypeDataVersion":0,"DataVersion":1,"DocumentTypeSource":"Automatic","DocumentTypeField":{"Components":[],"Value":"article","Reference":{"TextStartIndex":0,"TextLength":0,"Tokens":[]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},"Fields":[{"FieldId":"NewsArticle.Politics.article.Person","FieldName":"Person","FieldType":"Text","IsMissing":false,"DataSource":"ManuallyChanged","Values":[{"Components":[],"Value":"Ying Yong","Reference":{"TextStartIndex":711,"TextLength":9,"Tokens":[{"TextStartIndex":711,"TextLength":9,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[207.068,427.142,24.108,11.676],[207.068,454.142,27.084,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"President Xi Jinping","Reference":{"TextStartIndex":765,"TextLength":20,"Tokens":[{"TextStartIndex":765,"TextLength":20,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[220.658,288.588,50.774,11.676],[220.658,342.29,12.036,11.676],[220.658,357.17,40.416,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Jiang","Reference":{"TextStartIndex":837,"TextLength":5,"Tokens":[{"TextStartIndex":837,"TextLength":5,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[234.338,214.176,28.908,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Ether Yin","Reference":{"TextStartIndex":1370,"TextLength":9,"Tokens":[{"TextStartIndex":1370,"TextLength":10,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[353.758,162.12,29.616,11.676],[353.758,194.724,21.24,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Jiang","Reference":{"TextStartIndex":1585,"TextLength":5,"Tokens":[{"TextStartIndex":1585,"TextLength":5,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[380.998,365.288,29.016,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0}],"DataVersion":1},{"FieldId":"NewsArticle.Politics.article.TimeOrDate","FieldName":"TimeOrDate","FieldType":"Text","IsMissing":false,"DataSource":"ManuallyChanged","Values":[{"Components":[],"Value":"Thursday","Reference":{"TextStartIndex":276,"TextLength":8,"Tokens":[{"TextStartIndex":276,"TextLength":9,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[126.788,304.556,53.52,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Wednesday","Reference":{"TextStartIndex":2010,"TextLength":9,"Tokens":[{"TextStartIndex":2010,"TextLength":10,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[474.958,88.476,64.428,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0}],"DataVersion":1},{"FieldId":"NewsArticle.Politics.article.Organization","FieldName":"Organization","FieldType":"Text","IsMissing":false,"DataSource":"ManuallyChanged","Values":[{"Components":[],"Value":"Bloomberg","Reference":{"TextStartIndex":1,"TextLength":9,"Tokens":[{"TextStartIndex":0,"TextLength":11,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[73.988,72.024,67.368,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Communist Party","Reference":{"TextStartIndex":628,"TextLength":15,"Tokens":[{"TextStartIndex":628,"TextLength":15,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[193.388,436.644,62.1,11.676],[193.388,501.684,28.32,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Trivium","Reference":{"TextStartIndex":1422,"TextLength":7,"Tokens":[{"TextStartIndex":1422,"TextLength":7,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[353.758,434.174,42.816,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0}],"DataVersion":1},{"FieldId":"NewsArticle.Politics.article.GeographicEntity","FieldName":"GeographicEntity","FieldType":"Text","IsMissing":false,"DataSource":"ManuallyChanged","Values":[{"Components":[],"Value":"China","Reference":{"TextStartIndex":15,"TextLength":5,"Tokens":[{"TextStartIndex":15,"TextLength":5,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[73.988,154.1,31.26,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Hubei","Reference":{"TextStartIndex":335,"TextLength":5,"Tokens":[{"TextStartIndex":335,"TextLength":5,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[140.468,140.172,32.748,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Hubei","Reference":{"TextStartIndex":657,"TextLength":5,"Tokens":[{"TextStartIndex":657,"TextLength":5,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[207.068,129.732,32.748,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Shanghai","Reference":{"TextStartIndex":696,"TextLength":8,"Tokens":[{"TextStartIndex":696,"TextLength":8,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[207.068,337.322,49.44,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"U.S.","Reference":{"TextStartIndex":1034,"TextLength":4,"Tokens":[{"TextStartIndex":1034,"TextLength":4,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[287.258,91.824,22.308,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Japan","Reference":{"TextStartIndex":1042,"TextLength":5,"Tokens":[{"TextStartIndex":1042,"TextLength":5,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[287.258,130.548,32.172,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"China","Reference":{"TextStartIndex":1721,"TextLength":5,"Tokens":[{"TextStartIndex":1721,"TextLength":5,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[420.358,390.0,31.248,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Hubei","Reference":{"TextStartIndex":1935,"TextLength":5,"Tokens":[{"TextStartIndex":1935,"TextLength":5,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[461.278,154.092,32.748,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"U.S.","Reference":{"TextStartIndex":1971,"TextLength":4,"Tokens":[{"TextStartIndex":1971,"TextLength":4,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[461.278,346.92,22.308,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0},{"Components":[],"Value":"Wuhan","Reference":{"TextStartIndex":689,"TextLength":5,"Tokens":[{"TextStartIndex":689,"TextLength":6,"Page":0,"PageWidth":612.0,"PageHeight":792.0,"Boxes":[[207.068,292.562,41.868,11.676]]}]},"DerivedFields":[],"Confidence":1.0,"OperatorConfirmed":true,"OcrConfidence":1.0}],"DataVersion":1},{"FieldId":"NewsArticle.Politics.article.GeopoliticalEntity","FieldName":"GeopoliticalEntity","FieldType":"Text","IsMissing":true,"DataSource":"Automatic","Values":[],"DataVersion":0}]}}"""
+    my_extractor = NERExtractor("GMB")
+    my_extractor.retrain(text,validation_results)
 
 def test_archive_train_FB():
     my_extractor = NERExtractor(appName="FlightBooking")
     my_extractor.train_on_archive()
 
+def test_archive_train_EAP():
+    my_extractor = NERExtractor(appName="EAP")
+    my_extractor.train_on_archive()
+
 
 if __name__=='__main__':
     # sample = test_predict()
+    test_retrain_GMB()
     # test_retrain_FB()
     # test_extract_FB()
-    # test_retrain()
-
     # test_archive_train_FB()
-    test_retrain_EAP()
+    # test_retrain_EAP()
+    # test_archive_train_EAP()
