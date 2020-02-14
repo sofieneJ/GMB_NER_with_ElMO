@@ -7,3 +7,6 @@ tags_dic.json
 *.zip
 *.pyc
 *.bat
+models/Simple_BiLSTM
+server_models
+.vscode
