@@ -334,17 +334,6 @@ class NERExtractor():
         corpus = [seq[0] for seq in tagged_sequences]
         tags = [seq[1] for seq in tagged_sequences]
 
-        # zipped_seqs = zip(corpus, tags) 
-        # corpus = []
-        # tags = []
-        # for pair in zipped_seqs:
-        #     tags = pair[1]
-        #     hasNonTrivialTags = any([True if tag.strip() != 'O' else False for tag in tags])
-        #     if hasNonTrivialTags:
-        #         corpus.append(pair[0])
-        #         tags.append(pair[1])
-
-
         batch_np_sequences = np.array(pad_word_sequence(corpus, max_seq_len, PAD_WORD))
         if batch_np_sequences.shape[0] % batch_size != 0:
             batch_pad = np.array([[PAD_WORD for _ in range (0, max_seq_len)] for _ in range(0,batch_size-(batch_np_sequences.shape[0] % batch_size))])
