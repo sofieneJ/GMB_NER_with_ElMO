@@ -466,9 +466,9 @@ def test_archive_train_EAP():
 
 if __name__=='__main__':
     # sample = test_predict()
-    test_retrain_GMB()
+    # test_retrain_GMB()
     # test_retrain_FB()
-    # test_extract_FB()
+    test_extract_FB()
     # test_archive_train_FB()
     # test_retrain_EAP()
     # test_archive_train_EAP()
